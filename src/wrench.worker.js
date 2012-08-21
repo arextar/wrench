@@ -66,8 +66,11 @@
   }
   
   // Utility functions
-  var __bind = Function.prototype.bind || function () {
-    // TODO: polyfill
+  var __bind = Function.prototype.bind || function (context, a, b) {
+    var fn = this, len = arguments.length, args = len < 2 ? [] : len < 3 ? [a] : len < 4 ? [a, b] : __slice.call(arguments, 1)
+    return function () {
+      fn.apply(context, args.concat(__slice.call(arguments)))
+    }
   }
   
   wrench.each = function (array, each, callback) {
