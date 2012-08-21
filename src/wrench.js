@@ -108,4 +108,4 @@
     else events[type].push(fn)
   }
   
-}(typeof Worker === 'function' ? Worker : false))
+}(typeof Worker !== 'undefined' ? Worker : false))
