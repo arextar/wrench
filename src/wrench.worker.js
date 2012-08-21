@@ -44,16 +44,18 @@
       this.fns[data.args[0]].apply(this, data.args[1])
       return;
     }
+    
     var handlers = this.events[data.type]
     if (!handlers) return
     var args = this._decodeArgs(data.args)
+    
     if (typeof handlers === 'function') return handlers.apply(this, args)
     for (var i = 0; i < handlers.length; i++) handlers[i].apply(this,  args)
   }
   
   Worker.prototype.emit = function (type, a, b) {
     var len = arguments.length
-    this.worker.postMessage({type: type, args: this._encodeArgs(len < 2 ? [] : len < 3 ? [a] : len < 4 ? [a, b] : __slice.call(arguments, 1))})
+    this.worker.postMessage({type: type, args: len < 2 ? [] : this._encodeArgs(len < 3 ? [a] : len < 4 ? [a, b] : __slice.call(arguments, 1))})
   }
   
   Worker.prototype.on = function (type, fn) {

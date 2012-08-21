@@ -1,13 +1,7 @@
 ;(function (NativeWorker) {
   var wrench = window.wrench = {
     init: function (url) {
-      if (NativeWorker) {
-        return new Worker(new NativeWorker(url))
-      }
-      else
-      {
-        return new Worker(new FakeWorker(url))
-      }
+      return new Worker(new (NativeWorker || FakeWorker)(url))
     }
   }
   
@@ -26,8 +20,8 @@
       script.onreadystatechange = script.onload = function () {
         if (!script.readyState || script.readyState === 'complete' || script.readyState === 'done') {
           var self = that.__self = iframe.contentWindow.self
-          for (var i = 0; i < messages.length; i++) self.onmessage({data: messages[i]})
           var queue = self.__queue
+          for (var i = 0; i < messages.length; i++) self.onmessage({data: messages[i]})
           for (i = 0; i < queue.length; i++) that.onmessage({data: queue[i]})
           
           self.postMessage = iframe.contentWindow.postMessage = function (msg) {
@@ -98,7 +92,7 @@
   
   Worker.prototype.emit = function (type, a, b) {
     var len = arguments.length
-    this.worker.postMessage({type: type, args: this._encodeArgs(len < 2 ? [] : len < 3 ? [a] : len < 4 ? [a, b] : __slice.call(arguments, 1))})
+    this.worker.postMessage({type: type, args: len < 2 ? [] : this._encodeArgs(len < 3 ? [a] : len < 4 ? [a, b] : __slice.call(arguments, 1))})
   }
   
   Worker.prototype.on = function (type, fn) {
