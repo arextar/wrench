@@ -13,6 +13,7 @@ Trigger an event on a worker.
 
 
 ## Worker API
+Note: `importScripts(` path to wrench.worker.js `)` should be added to worker scripts
 
 ### wrench.on(type, callback)
 Listen for an event on the master.
